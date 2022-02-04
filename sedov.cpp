@@ -128,6 +128,7 @@ int main(int argc, char** argv)
         timer.start();
         domain.sync(d.codes, d.x, d.y, d.z, d.h, d.m, d.mui, d.u, d.vx, d.vy, d.vz, d.x_m1, d.y_m1, d.z_m1, d.du_m1,
                     d.dt_m1);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("domain::sync");
 
         d.resize(domain.nParticlesWithHalos()); // also resize arrays not listed in sync
@@ -136,28 +137,40 @@ int main(int argc, char** argv)
         std::fill(begin(d.m) + domain.endIndex(), begin(d.m) + domain.nParticlesWithHalos(), d.m[domain.startIndex()]);
 
         taskList.update(domain.startIndex(), domain.endIndex());
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("updateTasks");
         findNeighborsSfc(taskList.tasks, d.x, d.y, d.z, d.h, d.codes, domain.box());
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("FindNeighbors");
         computeDensity<Real>(taskList.tasks, d, domain.box());
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("Density");
         computeEquationOfStateEvrard<Real>(taskList.tasks, d);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("EquationOfState");
         domain.exchangeHalos(d.vx, d.vy, d.vz, d.ro, d.p, d.c);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("mpi::synchronizeHalos");
         computeIAD<Real>(taskList.tasks, d, domain.box());
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("IAD");
         domain.exchangeHalos(d.c11, d.c12, d.c13, d.c22, d.c23, d.c33);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("mpi::synchronizeHalos");
         computeMomentumAndEnergyIAD<Real>(taskList.tasks, d, domain.box());
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("MomentumEnergyIAD");
         computeTimestep<Real, TimestepPress2ndOrder<Real, Dataset>>(taskList.tasks, d);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("Timestep"); // AllReduce(min:dt)
         computePositions<Real, computeAcceleration<Real, Dataset>>(taskList.tasks, d, domain.box());
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("UpdateQuantities");
         computeTotalEnergy<Real>(taskList.tasks, d);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("EnergyConservation"); // AllReduce(sum:ecin,ein)
         updateSmoothingLength<Real>(taskList.tasks, d);
+        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("UpdateSmoothingLength");
 
         size_t totalNeighbors = neighborsSum(taskList.tasks);
@@ -193,7 +206,7 @@ int main(int argc, char** argv)
 #endif
             timer.step("writeFile");
         }
-        printf("iteration %i 's debug screen for lukey\n");
+        printf("iteration %i 's debug screen for lukey\n", d.iteration);
         std::cout << d.x[0] << " " << d.y[0] << " " << d.z[0] << " " << d.ro[0] << " " << d.h[0] << " " << d.u[0] << std::endl;
         std::cout << d.vx[0] << " " << d.vy[0] << " " << d.vz[0] << " " << d.p[0] << " " << d.c[0] << std::endl;
         std::cout << d.x[1] << " " << d.y[1] << " " << d.z[1] << " " << d.ro[1] << " " << d.h[1] << " " << d.u[1] << std::endl;
