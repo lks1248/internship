@@ -52,7 +52,6 @@ int main(int argc, char** argv)
     const size_t maxStep = parser.getInt("-s", 200);
     const int writeFrequency = parser.getInt("-w", -1);
     const bool quiet = parser.exists("--quiet");
-    const std::string checkpointInput = parser.getString("--cinput");
     const bool input = parser.exists("--input");
     const std::string inputFilePath = parser.getString("--input");
     const std::string outDirectory = parser.getString("--outDir");
@@ -67,15 +66,12 @@ int main(int argc, char** argv)
     const IFileWriter<Dataset>& fileWriter = SedovMPIFileWriter<Dataset>();
     const IFileReader<Dataset>& fileReader = SedovMPIInputFileReader<Dataset>();
 
-    auto d = fileReader.readParticleDataFromBinFile(inputFilePath, cubeSide); //read input
-    //auto d = SedovDataGenerator<Real, KeyType>::generate(cubeSide); // generate input
+    auto d = input ? fileReader.readParticleDataFromBinFile(inputFilePath, cubeSide)
+                   : SedovDataGenerator<Real, KeyType>::generate(cubeSide);
 
-    printf("luke's debug after data init \n");
-    std::cout << d.x[0] << " " << d.y[0] << " " << d.z[0] << " " << d.ro[0] << " " << d.h[0] << " " << d.u[0] << std::endl;
-    std::cout << d.vx[0] << " " << d.vy[0] << " " << d.vz[0] << " " << d.p[0] << " " << d.c[0] << std::endl;
-    std::cout << d.x[1] << " " << d.y[1] << " " << d.z[1] << " " << d.ro[1] << " " << d.h[1] << " " << d.u[1] << std::endl;
-    std::cout << d.x[2] << " " << d.y[2] << " " << d.z[2] << " " << d.ro[2] << " " << d.h[2] << " " << d.u[2] << std::endl;
-    printf("---------------------------------\n");
+    std::cout << d.x[0] << " " << d.y[0] << " " << d.z[0] << " " << d.h[0] << std::endl;
+    std::cout << d.x[1] << " " << d.y[1] << " " << d.z[1] << " " << d.h[1] << std::endl;
+    std::cout << d.x[2] << " " << d.y[2] << " " << d.z[2] << " " << d.h[2] << std::endl; 
 
     if (d.rank == 0) std::cout << "Data generated." << std::endl;
 
@@ -87,14 +83,7 @@ int main(int argc, char** argv)
     // we want about 100 global nodes per rank to decompose the domain with +-1% accuracy
     size_t bucketSize = std::max(bucketSizeFocus, d.n / (100 * d.nrank));
 
-    Box<Real> box(0, 1);
-    box = makeGlobalBox(d.x.begin(), d.x.end(), d.y.begin(), d.z.begin(), box);
-
-	// enable PBC and enlarge bounds
-    Real dx = 0.5 / cubeSide;
-    box = Box<Real>(box.xmin() - dx, box.xmax() + dx,
-                    box.ymin() - dx, box.ymax() + dx,
-                    box.zmin() - dx, box.zmax() + dx, true, true, true);
+    Box<Real> box(-0.5, 0.5, true);
 
     float theta = 1.0;
 
@@ -128,7 +117,6 @@ int main(int argc, char** argv)
         timer.start();
         domain.sync(d.codes, d.x, d.y, d.z, d.h, d.m, d.mui, d.u, d.vx, d.vy, d.vz, d.x_m1, d.y_m1, d.z_m1, d.du_m1,
                     d.dt_m1);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("domain::sync");
 
         d.resize(domain.nParticlesWithHalos()); // also resize arrays not listed in sync
@@ -137,40 +125,28 @@ int main(int argc, char** argv)
         std::fill(begin(d.m) + domain.endIndex(), begin(d.m) + domain.nParticlesWithHalos(), d.m[domain.startIndex()]);
 
         taskList.update(domain.startIndex(), domain.endIndex());
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("updateTasks");
         findNeighborsSfc(taskList.tasks, d.x, d.y, d.z, d.h, d.codes, domain.box());
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("FindNeighbors");
         computeDensity<Real>(taskList.tasks, d, domain.box());
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("Density");
         computeEquationOfStateEvrard<Real>(taskList.tasks, d);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("EquationOfState");
         domain.exchangeHalos(d.vx, d.vy, d.vz, d.ro, d.p, d.c);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("mpi::synchronizeHalos");
         computeIAD<Real>(taskList.tasks, d, domain.box());
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("IAD");
         domain.exchangeHalos(d.c11, d.c12, d.c13, d.c22, d.c23, d.c33);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("mpi::synchronizeHalos");
         computeMomentumAndEnergyIAD<Real>(taskList.tasks, d, domain.box());
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("MomentumEnergyIAD");
         computeTimestep<Real, TimestepPress2ndOrder<Real, Dataset>>(taskList.tasks, d);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("Timestep"); // AllReduce(min:dt)
         computePositions<Real, computeAcceleration<Real, Dataset>>(taskList.tasks, d, domain.box());
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("UpdateQuantities");
         computeTotalEnergy<Real>(taskList.tasks, d);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("EnergyConservation"); // AllReduce(sum:ecin,ein)
         updateSmoothingLength<Real>(taskList.tasks, d);
-        printf("debug: h[0]= %f \n", d.h[0]);
         timer.step("UpdateSmoothingLength");
 
         size_t totalNeighbors = neighborsSum(taskList.tasks);
@@ -206,12 +182,6 @@ int main(int argc, char** argv)
 #endif
             timer.step("writeFile");
         }
-        printf("iteration %i 's debug screen for lukey\n", d.iteration);
-        std::cout << d.x[0] << " " << d.y[0] << " " << d.z[0] << " " << d.ro[0] << " " << d.h[0] << " " << d.u[0] << std::endl;
-        std::cout << d.vx[0] << " " << d.vy[0] << " " << d.vz[0] << " " << d.p[0] << " " << d.c[0] << std::endl;
-        std::cout << d.x[1] << " " << d.y[1] << " " << d.z[1] << " " << d.ro[1] << " " << d.h[1] << " " << d.u[1] << std::endl;
-        std::cout << d.x[2] << " " << d.y[2] << " " << d.z[2] << " " << d.ro[2] << " " << d.h[2] << " " << d.u[2] << std::endl;
-        printf("---------------------------------------\n");
 
         timer.stop();
 

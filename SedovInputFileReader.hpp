@@ -99,10 +99,10 @@ protected:
 
         for (size_t i = 0; i < pd.count; i++)
         {
-            pd.x[i] = pd.x[i] - 0.5;
-            pd.y[i] = pd.y[i] - 0.5;
-            pd.z[i] = pd.z[i] - 0.5;
-            pd.h[i] = pd.h[i] / 3.;
+            // pd.x[i] = pd.x[i] - 0.5;
+            // pd.y[i] = pd.y[i] - 0.5;
+            // pd.z[i] = pd.z[i] - 0.5;
+            // pd.h[i] = pd.h[i] / 3.; //temporary fix to handle too large h values coming from WVTICs
             const T radius = std::sqrt(std::pow(pd.x[i],2) + std::pow(pd.y[i],2) + std::pow(pd.z[i],2));
 
             pd.m[i]        = mPart;
