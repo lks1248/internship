@@ -1,7 +1,7 @@
 # Documentation of Lukas' Work
 
 ## I/O from WVTICs to SPH-EXA
-* Updated `parse_gadget_format_two.py` to work in Python 3 TODO: (now gadget_two_parser.py)
+* Updated `parse_gadget_format_two.py` to work in Python 3 (now parser_working.py)
 * Created scripts to transform the Gadget2 binary to `.txt` file and SPH-EXA-compatible binaries/`.txt` files
 * Modified SPH-EXA's Sedov test case:
 	* Modified `sedov.cpp` to accept file input like Evrard TODO: include checkpoint inputs
