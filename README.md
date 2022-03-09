@@ -22,3 +22,5 @@
 		NOTE: currently the smoothing length is hardcoded to be divided by three to adjust to SPH-EXA's aim of ~100 neighbours
 	3. upscaling your initial conditions: run ```python box_scaler.py <PATH> <NPART> <N> ``` where PATH points to a SPH-EXA compatible binary, 
 		NPART is the number of particles in the input file and N is the scaling factor (you will end up with N^3 particles in your output)
+	4. cutting Evrard ICs out of a glass configuration block: run ```python evrard_cutter.py <PATH> <NPART>```
+		NOTE: currently not fully functional
