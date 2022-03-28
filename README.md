@@ -18,6 +18,10 @@
 		NOTE: currently the smoothing length is hardcoded to be divided by three to adjust to SPH-EXA's aim of ~100 neighbours
 	3. cutting Evrard ICs out of a glass configuration block: run ```python evrard_cutter.py <PATH>``` where <PATH> points to a SPH-EXA compatible HDF5 file.
 		
+	4. creating Kelvin-Helmholtz ICs out of glass configuration blocks: run ```python kelvin-helmholtz_squeezer.py <PATH1> <PATH2>
+		where <PATH1> is the outer (low-density) glass block and <PATH2> the inner (high-density) block
+		NOTE: this will create ICs with 128x the added number of particles of your input blocks
+			in a box with size [1, 1, 0.0625] 
 
 	Outdated, now handled at runtime in SPH-EXA:
 
