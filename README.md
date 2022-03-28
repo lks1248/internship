@@ -10,16 +10,18 @@
 	NOTE: for constant densities only! 
 * Added script to "cut" Evrard initial conditions out of a glass block
 * updated scripts to handle HDF5 files
+* Added script to generate Kelvin-Helmholtz ICs out of glass blocks
+* Added KH growth rate calculations to SPH-EXA (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
 
 ### How to use: 
 * Converting WVTICs outputs:
 	1. to `.txt`: run ```python outputwriter.py <PATH>``` where PATH points to the WVTICs binary output
 	2. to SPH-EXA format: run ```python outputwriter_sphexa.py <PATH>```. Outputs a HDF5 file.
 		NOTE: currently the smoothing length is hardcoded to be divided by three to adjust to SPH-EXA's aim of ~100 neighbours
-	3. cutting Evrard ICs out of a glass configuration block: run ```python evrard_cutter.py <PATH>``` where <PATH> points to a SPH-EXA compatible HDF5 file.
+	3. cutting Evrard ICs out of a glass configuration block: run ```python evrard_cutter.py <PATH>``` where PATH points to a SPH-EXA compatible HDF5 file.
 		
 	4. creating Kelvin-Helmholtz ICs out of glass configuration blocks: run ```python kelvin-helmholtz_squeezer.py <PATH1> <PATH2>```
-		where <PATH1> is the outer (low-density) glass block and <PATH2> the inner (high-density) block
+		where PATH1 is the outer (low-density) glass block and PATH2 the inner (high-density) block
 		NOTE: this will create ICs with 128x the added number of particles of your input blocks
 			in a box with size [1, 1, 0.0625] 
 
