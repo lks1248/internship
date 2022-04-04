@@ -84,4 +84,5 @@ step0.attrs["minDt"] = 	[1.0e-4]
 step0.attrs.create('pbc',[1, 1, 1], dtype=np.intc)
 step0.attrs["step"] = 	[0]
 step0.attrs["time"] =	[0.0]
+output.attrs["KelvinHelmholtzGrowthRate"] = [1]
 output.close()
