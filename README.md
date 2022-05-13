@@ -11,7 +11,6 @@
 * Added script to "cut" Evrard initial conditions out of a glass block
 * updated scripts to handle HDF5 files
 * Added script to generate Kelvin-Helmholtz ICs out of glass blocks
-* Added KH growth rate calculations to SPH-EXA (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
 
 ### How to use: 
 * Converting WVTICs outputs:
@@ -35,3 +34,11 @@
 		3. specify a input file with the argument `--input <PATH>` where PATH leads to your binary input file
 		NOTES: the number of particles in your file MUST be identical with your `-n` argument ^3
 				if no input is specified, SPH-EXA will default to the built-in generator
+				
+## Contributions in SPH-EXA:
+	* Added Observables Interface and KH growth rate calculations (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
+	* Added Gravitational waves Observable (see https://github.com/lks1248/SPH-EXA/tree/grav-waves-observable)
+	* different approaches to fixed boundaries:
+				immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries)
+				discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction)
+	
