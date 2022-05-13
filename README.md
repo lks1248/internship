@@ -36,9 +36,9 @@
 				if no input is specified, SPH-EXA will default to the built-in generator
 				
 ## Contributions in SPH-EXA:
-	* Added Observables Interface and KH growth rate calculations (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
-	* Added Gravitational waves Observable (see https://github.com/lks1248/SPH-EXA/tree/grav-waves-observable)
-	* different approaches to fixed boundaries:
-				immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries)
-				discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction)
+* Added Observables Interface and KH growth rate calculations (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
+* Added Gravitational waves Observable (see https://github.com/lks1248/SPH-EXA/tree/grav-waves-observable)
+* different approaches to fixed boundaries:
+			immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries)
+			discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction)
 	
