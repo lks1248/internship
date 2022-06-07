@@ -39,6 +39,6 @@
 * Added Observables Interface and KH growth rate calculations (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
 * Added Gravitational waves Observable (see https://github.com/lks1248/SPH-EXA/tree/grav-waves-observable)
 * different approaches to fixed boundaries:
-			immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries)
-			discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction)
+			immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries) works at least for one dimension
+			discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction) not fully tested
 	
