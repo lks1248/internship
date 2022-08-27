@@ -3,14 +3,15 @@
 ## I/O from WVTICs to SPH-EXA
 * Updated `parse_gadget_format_two.py` (included with WVTICs) to work in Python 3 (now parser_working.py)
 * Created scripts to transform the Gadget2 binary to `.txt` file and SPH-EXA-compatible binaries/`.txt` files
-* Modified SPH-EXA's Sedov test case:
-	* Modified `sedov.cpp` to accept file input like Evrard TODO: include checkpoint inputs
-	* Included a hybrid file reader/generator for Sedov `SedovInputFileReader.hpp`
-* Created script to stack initial condition "boxes" to increase resolution
-	NOTE: for constant densities only! 
-* Added script to "cut" Evrard initial conditions out of a glass block
 * updated scripts to handle HDF5 files
 * Added script to generate Kelvin-Helmholtz ICs out of glass blocks
+*outdated/no longer used: 
+	* Modified SPH-EXA's Sedov test case:
+		* Modified `sedov.cpp` to accept file input like Evrard TODO: include checkpoint inputs
+		* Included a hybrid file reader/generator for Sedov `SedovInputFileReader.hpp`
+	* Created script to stack initial condition "boxes" to increase resolution
+		NOTE: for constant densities only! 
+	* Added script to "cut" Evrard initial conditions out of a glass block
 
 ### How to use: 
 * Converting WVTICs outputs:
@@ -26,7 +27,7 @@
 
 	Outdated, now handled at runtime in SPH-EXA:
 
-	4. upscaling your initial conditions: run ```python box_scaler.py <PATH> <NPART> <N> ``` where PATH points to a SPH-EXA compatible binary file, 
+	* upscaling your initial conditions: run ```python box_scaler.py <PATH> <NPART> <N> ``` where PATH points to a SPH-EXA compatible binary file, 
 		NPART is the number of particles in the input file and N is the scaling factor (you will end up with N^3 particles in your output)
 	* Sedov file reader:
 		1. REPLACE your `sedov.cpp` and add the `SedovInputFileReader.hpp` to the sedov directory
@@ -39,6 +40,7 @@
 * Added Observables Interface and KH growth rate calculations (see https://github.com/lks1248/SPH-EXA/tree/kelvin-helmholtz)
 * Added Gravitational waves Observable (see https://github.com/lks1248/SPH-EXA/tree/grav-waves-observable)
 * different approaches to fixed boundaries:
-	- immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries) works at least for one dimension
-	- discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction) not fully tested
-	
+	- immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries) 
+	- discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction) not merged or fully tested
+* expanded on the wind shock test case: added observable and extended domain (https://github.com/unibas-dmi-hpc/SPH-EXA/pull/297)
+
