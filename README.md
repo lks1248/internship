@@ -5,7 +5,7 @@
 * Created scripts to transform the Gadget2 binary to `.txt` file and SPH-EXA-compatible binaries/`.txt` files
 * updated scripts to handle HDF5 files
 * Added script to generate Kelvin-Helmholtz ICs out of glass blocks
-*outdated/no longer used: 
+* outdated/no longer used: 
 	* Modified SPH-EXA's Sedov test case:
 		* Modified `sedov.cpp` to accept file input like Evrard TODO: include checkpoint inputs
 		* Included a hybrid file reader/generator for Sedov `SedovInputFileReader.hpp`
