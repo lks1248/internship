@@ -43,4 +43,5 @@
 	- immovable layer of particles (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries) 
 	- discrete correction of pressure (https://github.com/lks1248/SPH-EXA/tree/fixed-boundaries-discrete-correction) not merged or fully tested
 * expanded on the wind shock test case: added observable and extended domain (https://github.com/unibas-dmi-hpc/SPH-EXA/pull/297)
-
+* implemented the Kelvin-Helmholtz test case (https://github.com/unibas-dmi-hpc/SPH-EXA/pull/320)
+* added GPU-only Observable calculations for the Kelvin-Helmholtz, Wind Shock and Turbulence test cases (https://github.com/unibas-dmi-hpc/SPH-EXA/pull/340)
